@@ -105,6 +105,7 @@ h1 span { color: #56834b; }
 .primary span { font-size: 21px; }
 .keyboard { font-size: 10px; color: #83887e; }
 kbd { font: inherit; color: #505b49; }
+code { background: var(--surface, #f1f4ec); padding: 2px 6px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 13px; }
 .privacy { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #808679; margin-top: 25px; line-height: 1.6; }
 .privacy svg, .notice svg { flex-shrink: 0; }
 
@@ -134,11 +135,31 @@ kbd { font: inherit; color: #505b49; }
 .option-end { margin-left: auto; color: #769463; }
 .error { min-height: 17px; margin: 10px 0; color: #a13227; font-size: 12px; }
 
-.ratings { display: flex; gap: 12px; margin-top: 32px; }
+.ratings { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
 .rating { flex: 1; border: 1px solid #dce2d5; background: white; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 13px; padding: 21px 8px; color: #4a6040; }
 .rating span { font-size: 28px; }
 .rating:hover { background: #eef4e7; }
+.ratings-10 .rating { flex: 1 1 60px; font-weight: 700; font-size: 15px; padding: 16px 4px; }
 .scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin: 13px 0 25px; }
+
+.select-native {
+  display: block; width: 100%; max-width: 420px;
+  padding: 13px 14px; margin-top: 4px;
+  background: white; border: 1px solid #d3ddca; border-radius: 9px;
+  color: var(--ink); font-size: 15px; font-family: 'DM Sans', sans-serif;
+}
+
+.matrix-wrap { overflow-x: auto; margin-top: 8px; }
+.matrix { border-collapse: collapse; font-size: 13px; }
+.matrix th, .matrix td { padding: 10px 14px; text-align: center; border-bottom: 1px solid var(--line); }
+.matrix th { color: var(--muted); font-weight: 600; font-size: 11px; }
+.matrix-row-label { text-align: left; color: var(--ink); font-weight: 500; white-space: nowrap; }
+.matrix-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid #b9c4ac; background: white; cursor: pointer; padding: 0;
+}
+.matrix-radio:hover { border-color: var(--accent); }
+.matrix-radio.selected { background: var(--green); border-color: var(--green); }
 
 textarea { display: block; width: 100%; resize: vertical; min-height: 160px; max-height: 350px; background: white; border: 1px solid #d3ddca; border-radius: 9px; padding: 18px; color: var(--ink); font-size: 16px; line-height: 1.6; }
 textarea::placeholder { color: #9aa18e; }
