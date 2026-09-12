@@ -74,6 +74,21 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
     setRespuestas({ ...respuestas, [q.id]: { ...actual, [filaTexto]: columnaTexto } })
   }
 
+  // Para comparar la respuesta elegida contra pregunta.respuesta de una
+  // regla condicional (armada en el constructor sobre el texto de la
+  // opción, no sobre su id).
+  function valorComparable(pregunta, valor) {
+    if (pregunta.tipo === 'opcion_multiple' || pregunta.tipo === 'desplegable') return valor?.texto
+    if (pregunta.tipo === 'escala') return String(valor)
+    if (pregunta.tipo === 'checkbox' || pregunta.tipo === 'matriz') return null // no soportado
+    return valor // si_no, texto_libre
+  }
+
+  function terminarAca() {
+    onFinish(construirPayloadRespuestas(preguntas, respuestas))
+    setStep(preguntas.length)
+  }
+
   const next = () => {
     if (q && q.requerida) {
       const val = respuestas[q.id]
@@ -82,8 +97,20 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
         : estaVacio(val)
       if (incompleto) { setError('Esta pregunta es obligatoria.'); return }
     }
-    if (step === preguntas.length - 1) {
-      onFinish(construirPayloadRespuestas(preguntas, respuestas))
+    if (step === preguntas.length - 1) { terminarAca(); return }
+
+    if (q?.condicionales?.reglas?.length) {
+      const comparable = valorComparable(q, respuestas[q.id])
+      const regla = q.condicionales.reglas.find(r => r.respuesta === comparable)
+      if (regla) {
+        if (regla.accion === 'finalizar') { terminarAca(); return }
+        if (regla.accion === 'saltar') {
+          const destino = preguntas.findIndex(p => p.id === regla.destino_id)
+          if (destino >= 0) { setStep(destino); return }
+        }
+        // 'ocultar' / 'mostrar' afectan preguntas futuras específicas, no
+        // la navegación inmediata — no implementado en esta primera versión.
+      }
     }
     setStep(s => s + 1)
   }
