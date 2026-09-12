@@ -40,7 +40,7 @@ function construirPayloadRespuestas(preguntas, respuestas) {
   return filas
 }
 
-function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
+function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada, tema }) {
   const [step, setStep] = useState(-1)
   const [respuestas, setRespuestas] = useState({})
   const [error, setError] = useState('')
@@ -148,8 +148,9 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
 
   return (
     <div className="survey-area">
+      <div className="progress-top"><div style={{ width: progress + '%' }}/></div>
       <div className="survey-top">
-        <span>TU OPINIÓN CUENTA</span>
+        <span className="theme-badge" title={tema.label}>{tema.emoji}</span>
         <span className="demo"><i/> Respuesta anónima</span>
       </div>
       <main id="main" className={'main ' + (step < 0 ? 'welcome' : '')}>
@@ -289,15 +290,7 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
         </div>
       </main>
       <footer className="survey-footer">
-        <div className="progress-block">
-          <div className="progress-meta">
-            <span>{done ? 'Recorrido completo' : step < 0 ? 'Una conversación que empieza con vos' : `Pregunta ${step + 1} de ${preguntas.length}`}</span>
-            <span>{progress}%</span>
-          </div>
-          <div className="progress-track" role="progressbar" aria-label="Progreso de la encuesta" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
-            <div style={{ width: progress + '%' }}/>
-          </div>
-        </div>
+        <span className="footer-label">{done ? 'Recorrido completo' : step < 0 ? 'Empecemos' : `Pregunta ${step + 1} de ${preguntas.length}`}</span>
         <div className="navigation">
           <button aria-label="Pregunta anterior" disabled={step <= -1 || done} onClick={() => setStep(s => s - 1)}><Arrow back/></button>
           <button aria-label="Continuar encuesta" disabled={done} onClick={next}><Arrow/></button>
@@ -310,6 +303,7 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada }) {
 function Pantalla({ titulo, children }) {
   return (
     <div className="survey-area">
+      <div className="progress-top"><div style={{ width: 0 }}/></div>
       <main className="main welcome">
         <div className="screen">
           <h1>{titulo}</h1>
@@ -370,7 +364,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="page">
       <header>
         <Logo/>
         <div className="header-right">
@@ -378,20 +372,7 @@ export default function App() {
           <span>Metr1ka ↗</span>
         </div>
       </header>
-      <div className="layout">
-        <aside className="story">
-          <div className="story-top">
-            <span className="eyebrow"><span className="live-dot"/> {tema.eyebrow}</span>
-            <span className="edition">{tema.edition}</span>
-          </div>
-          <div className="story-copy">
-            <h2>{tema.tituloAside}</h2>
-            <p>{tema.bajadaAside}</p>
-          </div>
-          <tema.Ilustracion/>
-          <div className="story-bottom"><span>PERSONAS. DATOS. DECISIONES.</span><span>↗</span></div>
-        </aside>
-
+      <div className="stage">
         {estado === 'cargando' && <Pantalla titulo="Cargando…"/>}
         {estado === 'sin_subdominio' && (
           <Pantalla titulo="Falta indicar la encuesta">
@@ -409,9 +390,9 @@ export default function App() {
           </Pantalla>
         )}
         {estado === 'lista' && (
-          <Survey preguntas={preguntas} onFinish={handleFinish} enviando={enviando} errorEnvio={errorEnvio} titulo={titulo} bajada={bajada}/>
+          <Survey preguntas={preguntas} onFinish={handleFinish} enviando={enviando} errorEnvio={errorEnvio} titulo={titulo} bajada={bajada} tema={tema}/>
         )}
       </div>
-    </>
+    </div>
   )
 }
