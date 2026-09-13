@@ -13,14 +13,20 @@ const supabase = createClient(
 const ERRORES_CONOCIDOS = ['respuesta_duplicada', 'encuesta_no_disponible']
 
 // Los headers x-vercel-ip-* alcanzan para país casi siempre, pero para
-// ciudad/lat/lng dependen de la base MaxMind de Vercel, que para IPs
-// móviles/NAT de operadoras argentinas suele no tener precisión de ciudad
-// — el header directamente no llega, no es que llegue vacío. Sin eso el
-// mapa de la encuesta queda sin punto para esa respuesta ("sin ubicación").
-// Fallback: si faltan lat/lng, se completan con un servicio de geo-IP
-// dedicado (mejor cobertura que MaxMind para este caso). No bloquea el
-// guardado de la respuesta si falla o tarda — es un dato lindo de tener,
-// no algo de lo que dependa poder responder la encuesta.
+// ciudad dependen de la base MaxMind de Vercel, que para IPs móviles/NAT de
+// operadoras argentinas suele no tener precisión de ciudad. Ojo: en ese
+// caso Vercel NO deja lat/lng vacíos — manda las coordenadas del centroide
+// del país (en AR, ~Buenos Aires) sin avisar que es una aproximación
+// gruesa. Confiar en "¿vinieron lat/lng?" para decidir si hace falta
+// fallback fue el bug real: esa fila quedaba con un punto en Buenos Aires
+// aunque quien respondió estuviera en Posadas. El criterio correcto es
+// "¿vino ciudad?" — sin eso, las coordenadas no son de fiar.
+//
+// Fallback: sin ciudad, se pide a un servicio de geo-IP dedicado. Si ese
+// tampoco da ciudad, se deja lo que haya (mejor una aproximación de país
+// que nada), pero no se pisa un lat/lng bueno de Vercel con nada peor. No
+// bloquea el guardado de la respuesta si falla o tarda — es un dato lindo
+// de tener, no algo de lo que dependa poder responder la encuesta.
 const IP_PRIVADA = /^(127\.|10\.|192\.168\.|::1$|f[cd])/i
 
 async function geolocalizarFallback(ip) {
@@ -69,11 +75,17 @@ export default async function handler(req, res) {
     ? Number(req.headers['x-vercel-ip-longitude'])
     : null
 
-  if (latitud_ip == null || longitud_ip == null) {
+  if (!ciudad) {
     const fallback = await geolocalizarFallback(ip)
-    if (fallback) {
+    if (fallback?.ciudad) {
+      // Fallback trae ciudad y Vercel no — más preciso, pisa todo lo de Vercel.
+      pais = fallback.pais || pais
+      ciudad = fallback.ciudad
+      latitud_ip = fallback.latitud_ip
+      longitud_ip = fallback.longitud_ip
+    } else if (fallback && latitud_ip == null && longitud_ip == null) {
+      // Ninguno de los dos tiene ciudad — al menos completar coordenadas si Vercel no dio nada.
       pais = pais || fallback.pais
-      ciudad = ciudad || fallback.ciudad
       latitud_ip = fallback.latitud_ip
       longitud_ip = fallback.longitud_ip
     }
