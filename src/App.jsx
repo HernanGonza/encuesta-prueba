@@ -365,6 +365,14 @@ export default function App() {
       if (yaRespondio(subdominio)) { setEstado('ya_respondida'); return }
       setPreguntas(data.preguntas || [])
       setEstado('lista')
+    }).catch(() => {
+      // Sin esto, un error de red (no una respuesta con `error`, sino que
+      // la promesa directamente rechaza — típico al recargar con la
+      // conexión todavía despertando) dejaba `estado` en 'cargando' para
+      // siempre: el splash nunca corta porque su propio efecto de salida
+      // exige `estado !== 'cargando'`. Quedaba trabado en la animación de
+      // entrada sin ningún mensaje de error.
+      setEstado('no_encontrada')
     })
   }, [subdominio])
 
