@@ -233,7 +233,7 @@ textarea::placeholder { color: var(--muted2); }
 .splash-content svg { width: 180px; height: auto; }
 .splash-tagline { margin: 0; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.4); text-align: center; }
 .splash-track { height: 3px; width: 100%; border-radius: 2px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
-.splash-fill { height: 100%; border-radius: 2px; background: #52b788; animation: splash-fill 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+.splash-fill { height: 100%; border-radius: 2px; background: #52b788; animation: splash-fill 2s cubic-bezier(.4, 0, .2, 1) forwards; }
 
 /* ── Modal de términos y condiciones ── */
 .modal-overlay {
@@ -270,8 +270,7 @@ textarea::placeholder { color: var(--muted2); }
 
 @keyframes splash-fill {
   0% { width: 0%; }
-  60% { width: 70%; }
-  100% { width: 90%; }
+  100% { width: 100%; }
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 

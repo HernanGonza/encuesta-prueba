@@ -335,6 +335,15 @@ export default function App() {
   const [preguntas, setPreguntas] = useState([])
   const [enviando, setEnviando] = useState(false)
   const [errorEnvio, setErrorEnvio] = useState(null)
+  const [splashMinimoCumplido, setSplashMinimoCumplido] = useState(false)
+
+  // El splash siempre completa su animación (como en la app móvil: la barra
+  // llega al 100% aunque la encuesta ya haya cargado) en vez de cortarse a
+  // mitad de camino apenas responde la red.
+  useEffect(() => {
+    const t = setTimeout(() => setSplashMinimoCumplido(true), 2200)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     if (!subdominio) { setEstado('sin_subdominio'); return }
@@ -377,7 +386,7 @@ export default function App() {
     setEnviando(false)
   }
 
-  if (estado === 'cargando') {
+  if (estado === 'cargando' || !splashMinimoCumplido) {
     return (
       <div className="splash" role="status" aria-live="polite">
         <div className="splash-content">
