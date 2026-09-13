@@ -377,6 +377,18 @@ export default function App() {
     setEnviando(false)
   }
 
+  if (estado === 'cargando') {
+    return (
+      <div className="splash" role="status" aria-live="polite">
+        <div className="splash-content">
+          <Logo dark/>
+          <p className="splash-tagline">Estamos cargando tu encuesta</p>
+          <div className="splash-track"><div className="splash-fill"/></div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="page">
       <header>
@@ -389,16 +401,6 @@ export default function App() {
         </div>
       </header>
       <div className="stage">
-        {estado === 'cargando' && (
-          <div className="survey-area">
-            <main className="main welcome">
-              <div className="loading-screen" role="status" aria-live="polite">
-                <span className="spinner" aria-hidden="true"/>
-                <p>Estamos cargando tu encuesta…</p>
-              </div>
-            </main>
-          </div>
-        )}
         {estado === 'sin_subdominio' && (
           <Pantalla titulo="Falta indicar la encuesta">
             <p className="intro">Esta página se abre desde el subdominio de cada encuesta (ej. campogrande.metr1ka.com). En desarrollo local, agregá <code>?subdominio=campogrande</code> a la URL.</p>

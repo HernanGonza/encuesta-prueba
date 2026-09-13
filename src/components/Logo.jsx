@@ -1,5 +1,5 @@
 export default function Logo({ dark = false }) {
-  const primary = dark ? '#eef3ea' : '#1a472a'
+  const primary = dark ? '#ffffff' : '#1a472a'
   return (
     <svg width="157" height="13" viewBox="0 0 751 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Metr1ka" role="img">
       <path d="M76.224 54.144H61.824L114.24 0H138.24V61.44H114.24V19.584L121.44 22.56L83.52 61.44H54.72L16.704 22.656L24 19.68V61.44H0V0H24L76.224 54.144Z" fill={primary}/>
