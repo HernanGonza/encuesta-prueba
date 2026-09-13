@@ -352,7 +352,7 @@ export default function App() {
   useEffect(() => {
     if (estado === 'cargando' || !splashMinimoCumplido || splashFase !== 'visible') return
     setSplashFase('saliendo')
-    const t = setTimeout(() => setSplashFase('oculto'), 400)
+    const t = setTimeout(() => setSplashFase('oculto'), 1000)
     return () => clearTimeout(t)
   }, [estado, splashMinimoCumplido, splashFase])
 
