@@ -4,9 +4,29 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#1a472a"/>
-<meta name="description" content="Tu ciudad. Tu mirada. Una experiencia de encuesta online de Metr1ka."/>
+<meta name="description" content="Contanos qué pensás de tu ciudad. Encuestas online de Metr1ka: anónimas, rápidas y pensadas para tu comunidad."/>
 <title>Tu ciudad, tu mirada — Metr1ka</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+<!-- Vista previa al compartir el link (WhatsApp, Telegram, redes) — sin
+     esto se mostraba el título pero ningún logo/imagen. Estos valores son
+     el fallback genérico: en producción, la ruta "/" pasa por
+     api/render.js (ver vercel.json), que pisa título/descripción/og:image
+     con los de la encuesta de ese subdominio (titulo_publico/
+     subtitulo_publico) antes de devolver el HTML — necesario porque los
+     bots que arman la vista previa no ejecutan JavaScript. -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Metr1ka"/>
+<meta property="og:title" content="Tu ciudad, tu mirada — Metr1ka"/>
+<meta property="og:description" content="Contanos qué pensás de tu ciudad. Encuestas online de Metr1ka: anónimas, rápidas y pensadas para tu comunidad."/>
+<meta property="og:image" content="/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Metr1ka — Tu ciudad, tu mirada"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Tu ciudad, tu mirada — Metr1ka"/>
+<meta name="twitter:description" content="Contanos qué pensás de tu ciudad. Encuestas online de Metr1ka: anónimas, rápidas y pensadas para tu comunidad."/>
+<meta name="twitter:image" content="/og-image.png"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <script>
   // Aplica el tema antes de pintar para evitar el flash claro/oscuro
