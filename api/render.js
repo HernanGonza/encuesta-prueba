@@ -51,10 +51,22 @@ export default async function handler(req, res) {
   try {
     const html = await fetch(`https://${req.headers.host}/index.html`).then(r => r.text())
 
+    // og:image/twitter:image/og:url van absolutas, con el host real de
+    // este request, sin importar si hay o no encuesta para ese subdominio
+    // — más estricto que dejarlas relativas/genéricas (algunos crawlers no
+    // resuelven bien una ruta relativa) y Facebook pide og:url obligatoria.
+    const imagenAbsoluta = `https://${req.headers.host}/og-image.png`
+    const urlAbsoluta    = `https://${req.headers.host}/`
+
     const subdominio = resolverSubdominio(req)
     if (!subdominio) {
+      const out = html
+        .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${urlAbsoluta}$2`)
+        .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${imagenAbsoluta}$2`)
+        .replace(/(<meta property="og:image:secure_url" content=")[^"]*(")/, `$1${imagenAbsoluta}$2`)
+        .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${imagenAbsoluta}$2`)
       res.setHeader('Content-Type', 'text/html; charset=utf-8')
-      res.status(200).send(html)
+      res.status(200).send(out)
       return
     }
 
@@ -67,14 +79,10 @@ export default async function handler(req, res) {
       ? escaparHTML(encuesta.subtitulo_publico || encuesta.descripcion || DESCRIPCION_GENERICA)
       : DESCRIPCION_GENERICA
 
-    // De paso, og:image/twitter:image pasan a ser absolutas (con el host
-    // real de este request) en vez de relativas — más estricto, algunos
-    // crawlers no resuelven bien una ruta relativa.
-    const imagenAbsoluta = `https://${req.headers.host}/og-image.png`
-
     const out = html
       .replace(/<title>.*?<\/title>/, `<title>${titulo}</title>`)
       .replace(/(<meta name="description" content=")[^"]*(")/, `$1${descripcion}$2`)
+      .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${urlAbsoluta}$2`)
       .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${titulo}$2`)
       .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${descripcion}$2`)
       .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${imagenAbsoluta}$2`)
