@@ -336,6 +336,7 @@ export default function App() {
   const [enviando, setEnviando] = useState(false)
   const [errorEnvio, setErrorEnvio] = useState(null)
   const [splashMinimoCumplido, setSplashMinimoCumplido] = useState(false)
+  const [splashFase, setSplashFase] = useState('visible') // visible | saliendo | oculto
 
   // El splash siempre completa su animación (como en la app móvil: la barra
   // llega al 100% aunque la encuesta ya haya cargado) en vez de cortarse a
@@ -344,6 +345,16 @@ export default function App() {
     const t = setTimeout(() => setSplashMinimoCumplido(true), 2200)
     return () => clearTimeout(t)
   }, [])
+
+  // Una vez que terminó la animación mínima y ya sabemos qué mostrar, el
+  // splash se desvanece con transición en vez de desaparecer de golpe —
+  // la página real ya está montada debajo, tapada por el overlay.
+  useEffect(() => {
+    if (estado === 'cargando' || !splashMinimoCumplido || splashFase !== 'visible') return
+    setSplashFase('saliendo')
+    const t = setTimeout(() => setSplashFase('oculto'), 400)
+    return () => clearTimeout(t)
+  }, [estado, splashMinimoCumplido, splashFase])
 
   useEffect(() => {
     if (!subdominio) { setEstado('sin_subdominio'); return }
@@ -386,20 +397,17 @@ export default function App() {
     setEnviando(false)
   }
 
-  if (estado === 'cargando' || !splashMinimoCumplido) {
-    return (
-      <div className="splash" role="status" aria-live="polite">
-        <div className="splash-content">
-          <Logo dark/>
-          <p className="splash-tagline">Estamos cargando tu encuesta</p>
-          <div className="splash-track"><div className="splash-fill"/></div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="page">
+      {splashFase !== 'oculto' && (
+        <div className={'splash' + (splashFase === 'saliendo' ? ' splash-saliendo' : '')} role="status" aria-live="polite">
+          <div className="splash-content">
+            <Logo dark/>
+            <p className="splash-tagline">Estamos cargando tu encuesta</p>
+            <div className="splash-track"><div className="splash-fill"/></div>
+          </div>
+        </div>
+      )}
       <header>
         <Logo dark={esOscuro}/>
         <div className="header-right">
