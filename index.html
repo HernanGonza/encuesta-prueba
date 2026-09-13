@@ -8,6 +8,18 @@
 <title>Tu ciudad, tu mirada — Metr1ka</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<script>
+  // Aplica el tema antes de pintar para evitar el flash claro/oscuro
+  (function () {
+    try {
+      var saved = localStorage.getItem('metr1ka-theme');
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Ir a la encuesta</a>

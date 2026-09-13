@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
+import { Sun, Moon } from 'lucide-react'
 import Logo from './components/Logo'
 import { Arrow, Lock } from './components/Icons'
+import TermsModal from './components/TermsModal'
 import { supabase } from './lib/supabase'
 import { resolverSubdominio } from './lib/subdominio'
 import { obtenerTokenNavegador, obtenerFingerprint, yaRespondio, marcarRespondida } from './lib/antifraude'
 import { resolverTema } from './lib/temas'
+import { useModoColor } from './hooks/useModoColor'
 
 function estaVacio(valor) {
   if (valor === undefined || valor === null || valor === '') return true
@@ -44,6 +47,8 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada, tem
   const [step, setStep] = useState(-1)
   const [respuestas, setRespuestas] = useState({})
   const [error, setError] = useState('')
+  const [mostrarTerminos, setMostrarTerminos] = useState(false)
+  const [terminosAceptados, setTerminosAceptados] = useState(false)
   const heading = useRef(null)
 
   const q = preguntas[step]
@@ -90,6 +95,7 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada, tem
   }
 
   const next = () => {
+    if (step === -1 && !terminosAceptados) { setMostrarTerminos(true); return }
     if (q && q.requerida) {
       const val = respuestas[q.id]
       const incompleto = q.tipo === 'matriz'
@@ -112,6 +118,12 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada, tem
         // la navegación inmediata — no implementado en esta primera versión.
       }
     }
+    setStep(s => s + 1)
+  }
+
+  function aceptarTerminos() {
+    setTerminosAceptados(true)
+    setMostrarTerminos(false)
     setStep(s => s + 1)
   }
 
@@ -296,6 +308,7 @@ function Survey({ preguntas, onFinish, enviando, errorEnvio, titulo, bajada, tem
           <button aria-label="Continuar encuesta" disabled={done} onClick={next}><Arrow/></button>
         </div>
       </footer>
+      {mostrarTerminos && <TermsModal onAccept={aceptarTerminos} onClose={() => setMostrarTerminos(false)}/>}
     </div>
   )
 }
@@ -315,6 +328,7 @@ function Pantalla({ titulo, children }) {
 }
 
 export default function App() {
+  const { toggle, esOscuro } = useModoColor()
   const [subdominio] = useState(resolverSubdominio)
   const [estado, setEstado] = useState('cargando') // cargando | no_encontrada | lista | sin_subdominio | ya_respondida
   const [encuesta, setEncuesta] = useState(null)
@@ -366,14 +380,25 @@ export default function App() {
   return (
     <div className="page">
       <header>
-        <Logo/>
+        <Logo dark={esOscuro}/>
         <div className="header-right">
-          <span>Entender hoy. Transformar mañana.</span>
+          <button className="theme-toggle" onClick={toggle} aria-label={esOscuro ? 'Activar modo claro' : 'Activar modo oscuro'}>
+            {esOscuro ? <Sun size={16} strokeWidth={2}/> : <Moon size={16} strokeWidth={2}/>}
+          </button>
           <span>Metr1ka ↗</span>
         </div>
       </header>
       <div className="stage">
-        {estado === 'cargando' && <Pantalla titulo="Cargando…"/>}
+        {estado === 'cargando' && (
+          <div className="survey-area">
+            <main className="main welcome">
+              <div className="loading-screen" role="status" aria-live="polite">
+                <span className="spinner" aria-hidden="true"/>
+                <p>Estamos cargando tu encuesta…</p>
+              </div>
+            </main>
+          </div>
+        )}
         {estado === 'sin_subdominio' && (
           <Pantalla titulo="Falta indicar la encuesta">
             <p className="intro">Esta página se abre desde el subdominio de cada encuesta (ej. campogrande.metr1ka.com). En desarrollo local, agregá <code>?subdominio=campogrande</code> a la URL.</p>
