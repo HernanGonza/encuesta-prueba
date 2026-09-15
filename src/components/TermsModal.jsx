@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Lock } from './Icons'
 
-// A dónde mandar a alguien que decide no participar al hacer clic en
-// "Cancelar" — deja de tener sentido dejarlo en la pantalla de la encuesta.
-const URL_SALIDA = 'https://www.google.com'
-const DEMORA_SALIDA_MS = 1800
-
 export default function TermsModal({ onAccept, onClose }) {
   const acceptRef = useRef(null)
   const [declinado, setDeclinado] = useState(false)
@@ -20,10 +15,13 @@ export default function TermsModal({ onAccept, onClose }) {
 
   // Cancelar (a diferencia de cerrar con Escape/click afuera, que solo
   // oculta el modal y deja reconsiderar) es una decisión explícita de no
-  // participar: se agradece y se saca a la persona de la encuesta.
+  // participar. La mayoría abre esto desde el navegador integrado de
+  // WhatsApp, que ignora window.close() por venir de una pestaña que no
+  // abrió un script — así que no hay redirect: se agradece y se la invita
+  // a cerrar la pestaña ella misma con la X.
   function cancelar() {
     setDeclinado(true)
-    setTimeout(() => { window.location.href = URL_SALIDA }, DEMORA_SALIDA_MS)
+    window.close()
   }
 
   return (
@@ -33,7 +31,7 @@ export default function TermsModal({ onAccept, onClose }) {
           <>
             <div className="modal-icon">🙏</div>
             <h2 id="terms-title">Gracias por tu tiempo</h2>
-            <p className="intro">Entendemos que prefieras no participar. Te estamos redirigiendo…</p>
+            <p className="intro">Entendemos que prefieras no participar. Ya podés cerrar esta pestaña.</p>
           </>
         ) : (
           <>
