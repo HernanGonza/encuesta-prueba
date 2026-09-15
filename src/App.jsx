@@ -422,7 +422,7 @@ export default function App() {
           <button className="theme-toggle" onClick={toggle} aria-label={esOscuro ? 'Activar modo claro' : 'Activar modo oscuro'}>
             {esOscuro ? <Sun size={16} strokeWidth={2}/> : <Moon size={16} strokeWidth={2}/>}
           </button>
-          <span>Metr1ka</span>
+          <span>Metr1ka ↗</span>
         </div>
       </header>
       <div className="stage">

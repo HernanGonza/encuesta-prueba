@@ -106,7 +106,7 @@ header > svg { width: 132px; height: auto; }
 
 .theme-toggle {
   display: flex; align-items: center; justify-content: center;
-  width: 40px; height: 40px; border-radius: 8px;
+  width: 34px; height: 34px; border-radius: 8px;
   border: 1.5px solid var(--card-border);
   background: var(--surface); color: var(--ink2);
   transition: all .15s;
@@ -169,8 +169,8 @@ code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-fa
 
 .survey-footer { flex: 0 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 0 18px; }
 .footer-label { font-size: 11px; color: var(--muted); }
-.navigation { display: flex; gap: 8px; }
-.navigation button { width: 44px; height: 44px; background: transparent; border: 1px solid var(--card-border); border-radius: 8px; color: var(--green); font-size: 18px; }
+.navigation { display: flex; gap: 6px; }
+.navigation button { width: 32px; height: 32px; background: transparent; border: 1px solid var(--card-border); border-radius: 5px; color: var(--green); font-size: 16px; }
 .navigation button:hover:enabled { background: var(--card-hover-bg); }
 .navigation button:disabled { opacity: .3; }
 
@@ -201,7 +201,7 @@ code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-fa
   display: block; width: 100%; max-width: 420px;
   padding: 13px 14px; margin-top: 4px;
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 9px;
-  color: var(--ink); font-size: 16px; font-family: 'DM Sans', sans-serif;
+  color: var(--ink); font-size: 15px; font-family: 'DM Sans', sans-serif;
 }
 
 .matrix-wrap { overflow-x: auto; margin-top: 6px; max-height: 100%; }
@@ -210,17 +210,11 @@ code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-fa
 .matrix th { color: var(--muted); font-weight: 600; font-size: 11px; }
 .matrix-row-label { text-align: left; color: var(--ink); font-weight: 500; white-space: nowrap; }
 .matrix-radio {
-  width: 36px; height: 36px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 0; background: transparent; cursor: pointer; padding: 0;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--radio-border); background: var(--card-bg); cursor: pointer; padding: 0;
 }
-.matrix-radio::after {
-  content: ''; width: 20px; height: 20px; border-radius: 50%;
-  border: 1.5px solid var(--radio-border); background: var(--card-bg);
-  transition: background .15s, border-color .15s;
-}
-.matrix-radio:hover::after { border-color: var(--accent); }
-.matrix-radio.selected::after { background: var(--green); border-color: var(--green); }
+.matrix-radio:hover { border-color: var(--accent); }
+.matrix-radio.selected { background: var(--green); border-color: var(--green); }
 
 textarea { display: block; width: 100%; resize: vertical; min-height: 120px; max-height: 260px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 9px; padding: 16px; color: var(--ink); font-size: 16px; line-height: 1.6; }
 textarea::placeholder { color: var(--muted2); }
@@ -262,7 +256,6 @@ textarea::placeholder { color: var(--muted2); }
   border-radius: 16px;
   padding: 32px;
   max-width: 440px; width: 100%;
-  max-height: 90dvh; overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,.25);
   animation: enter .22s ease;
 }
@@ -289,13 +282,11 @@ textarea::placeholder { color: var(--muted2); }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 700px) {
-  header { height: 48px; padding: 0 20px; }
+  header { height: 56px; padding: 0 20px; }
   header > svg { width: 112px; }
   .header-right { font-size: 10px; gap: 12px; }
   .header-right span:last-child { padding-left: 12px; }
   .survey-area { padding: 0 20px; }
-  .survey-top { padding: 10px 0; }
-  .main { align-items: flex-start; }
   .keyboard { display: none; }
   .facts { gap: 14px; }
   h1 { font-size: clamp(26px, 8vw, 36px); }
